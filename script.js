@@ -47,4 +47,45 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     });
+
+    // Add parallax effect to hero section
+    window.addEventListener('scroll', () => {
+        const hero = document.querySelector('.hero');
+        const scrolled = window.pageYOffset;
+        hero.style.backgroundPositionY = `${scrolled * 0.5}px`;
+    });
+
+    // Add hover effect to product cards
+    document.querySelectorAll('.product-card').forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            const rotateX = (y - centerY) / 10;
+            const rotateY = -(x - centerX) / 10;
+            
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.05, 1.05, 1.05)`;
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = '';
+        });
+    });
+
+    // Add intersection observer for fade-in animations
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('fade-in');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.product-card, .footer-section').forEach(el => {
+        observer.observe(el);
+    });
 });
